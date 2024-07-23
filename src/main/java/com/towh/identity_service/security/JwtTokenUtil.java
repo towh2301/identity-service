@@ -28,7 +28,6 @@ public class JwtTokenUtil {
 
     // Generate a JWT token
     public String generateToken(UserLoginRequest request) {
-        SecretKey key = new SecretKeySpec(this.secret.getBytes(StandardCharsets.UTF_8), "AES");
         HashMap<String, Object> claims = new HashMap<>();
         claims.put("username", request.getUsername());
         claims.put("email", request.getEmail());
@@ -41,7 +40,7 @@ public class JwtTokenUtil {
                 .subject(request.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiration * 1000))
-                .signWith(key)
+                .signWith(this.secret)
                 .compact();
     }
 
@@ -60,7 +59,7 @@ public class JwtTokenUtil {
     }
 
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().verifyWith(secret).parseClaimsJws(token).getBody();
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     private Boolean isTokenExpired(String token) {
