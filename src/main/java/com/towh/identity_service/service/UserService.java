@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import com.towh.identity_service.dto.request.UserCreationRequest;
 import com.towh.identity_service.dto.request.UserUpdateRequest;
 import com.towh.identity_service.entity.User;
+import com.towh.identity_service.exception.AppException;
+import com.towh.identity_service.exception.ErrorCode;
 import com.towh.identity_service.repository.UserRepository;
 
 @Service
@@ -14,11 +16,11 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User createRequest(UserCreationRequest request) {
+    public User createUser(UserCreationRequest request) {
         User user = new User();
 
         if (userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username already exists");
+            throw new AppException(ErrorCode.USER_EXISTED);
         }
 
         // Set the user's properties from the request

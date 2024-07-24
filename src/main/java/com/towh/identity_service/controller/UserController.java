@@ -3,7 +3,8 @@ package com.towh.identity_service.controller;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
+
+import com.towh.identity_service.dto.request.ApiResponse;
 import com.towh.identity_service.dto.request.UserCreationRequest;
 import com.towh.identity_service.dto.request.UserUpdateRequest;
 import com.towh.identity_service.entity.User;
@@ -12,10 +13,6 @@ import com.towh.identity_service.service.UserService;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/users") // It helps us to create a base URL for all the endpoints in the controller
@@ -26,7 +23,11 @@ public class UserController {
     // Add a POST mapping to create a new user
     @PostMapping
     public User postCreateUser(@RequestBody @Valid UserCreationRequest request) {
-        return userService.createRequest(request);
+        ApiResponse<User> response = new ApiResponse<>();
+        response.setCode(1000);
+        response.setResult(userService.createUser(request));
+
+        return response.getResult();
     }
 
     @GetMapping
