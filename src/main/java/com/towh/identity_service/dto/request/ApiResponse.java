@@ -1,38 +1,18 @@
 package com.towh.identity_service.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonInclude(JsonInclude.Include.NON_NULL) // Ensure that null fields are not serialized
 public class ApiResponse<T> {
     private int code;
     private String message;
     private T result;
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public T getResult() {
-        return result;
-    }
-
-    public void setResult(T result) {
-        this.result = result;
-    }
-
-    // public ApiResponse(int code, String message, T result) {
-    // this.code = code;
-    // this.message = message;
-    // this.result = result;
-    // }
-
 }

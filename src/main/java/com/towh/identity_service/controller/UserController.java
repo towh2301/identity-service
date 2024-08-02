@@ -22,22 +22,35 @@ public class UserController {
 
     // Add a POST mapping to create a new user
     @PostMapping
-    public User postCreateUser(@RequestBody @Valid UserCreationRequest request) {
+    public ApiResponse<?> createUser(@RequestBody @Valid UserCreationRequest request) {
         ApiResponse<User> response = new ApiResponse<>();
-        response.setCode(1000);
+
+        // Set the response code and result
+        response.setCode(200);
         response.setResult(userService.createUser(request));
 
-        return response.getResult();
+        return response;
     }
 
-    @GetMapping
-    List<User> getAllUser() {
-        return userService.getAllUser();
+    @GetMapping // Add a GET mapping
+    ApiResponse<?> getAllUser() {
+        ApiResponse<Map<Integer, List<User>>> response = new ApiResponse<>();
+
+        // Set the response code and result
+        response.setCode(200);
+        response.setResult(Collections.singletonMap(userService.getAllUser().size(), userService.getAllUser()));
+        return response;
     }
 
     @GetMapping("/{userId}")
-    User getUserById(@PathVariable("userId") String userId) {
-        return userService.getUserById(userId);
+    ApiResponse<?> getUserById(@PathVariable("userId") String userId) {
+        ApiResponse<User> response = new ApiResponse<>();
+
+        // Set the response code and result
+        response.setCode(200);
+        response.setResult(userService.getUserById(userId));
+
+        return response;
     }
 
     @PutMapping("{userId}")

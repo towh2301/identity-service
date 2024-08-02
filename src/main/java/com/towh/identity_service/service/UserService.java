@@ -9,6 +9,7 @@ import com.towh.identity_service.dto.request.UserUpdateRequest;
 import com.towh.identity_service.entity.User;
 import com.towh.identity_service.exception.AppException;
 import com.towh.identity_service.exception.ErrorCode;
+import com.towh.identity_service.mapper.UserMapper;
 import com.towh.identity_service.repository.UserRepository;
 
 @Service
@@ -16,19 +17,17 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User createUser(UserCreationRequest request) {
-        User user = new User();
+    @Autowired
+    private UserMapper userMapper;
 
+    public User createUser(UserCreationRequest request) {
+        // Check if the user already exists
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
 
-        // Set the user's properties from the request
-        user.setUsername(request.getUsername());
-        user.setPassword(request.getPassword());
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setDob(request.getDob());
+        // Set the user's properties from the request using mapstruct
+        User user = userMapper.toUser(request);
 
         // Save the user to the database
         return userRepository.save(user);
@@ -39,22 +38,14 @@ public class UserService {
     }
 
     public User getUserById(String userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        return userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
     }
 
     public User updateUser(String userId, UserUpdateRequest request) {
         User user = getUserById(userId);
+        userMapper.updateUser(user, request);
 
-        // Set the user's properties from the request
-        user.setPassword(request.getPassword());
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setDob(request.getDob());
-
-        // Save the updated user to the database
-        userRepository.save(user);
-
-        return user;
+        return userRepository.save(user);
     }
 
     public void deleteUser(String userId) {
