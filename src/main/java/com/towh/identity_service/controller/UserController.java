@@ -2,6 +2,8 @@ package com.towh.identity_service.controller;
 
 import java.util.*;
 
+import com.towh.identity_service.dto.response.UserResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.towh.identity_service.dto.request.ApiResponse;
@@ -16,9 +18,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users") // It helps us to create a base URL for all the endpoints in the controller
+@RequiredArgsConstructor
 public class UserController {
     @Autowired
-    private UserService userService;
+    private static UserService userService;
 
     // Add a POST mapping to create a new user
     @PostMapping
@@ -44,7 +47,7 @@ public class UserController {
 
     @GetMapping("/{userId}")
     ApiResponse<?> getUserById(@PathVariable("userId") String userId) {
-        ApiResponse<User> response = new ApiResponse<>();
+        ApiResponse<UserResponse> response = new ApiResponse<>();
 
         // Set the response code and result
         response.setCode(200);
@@ -54,7 +57,7 @@ public class UserController {
     }
 
     @PutMapping("{userId}")
-    User putMethodName(@PathVariable("userId") String id, @RequestBody UserUpdateRequest request) {
+    UserResponse putMethodName(@PathVariable("userId") String id, @RequestBody UserUpdateRequest request) {
         return userService.updateUser(id, request);
     }
 
