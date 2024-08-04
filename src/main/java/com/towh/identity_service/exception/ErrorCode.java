@@ -1,5 +1,11 @@
 package com.towh.identity_service.exception;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
+
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Getter
 public enum ErrorCode {
     // User Management
     USER_EXISTED(1001, "User existed"),
@@ -28,22 +34,16 @@ public enum ErrorCode {
     // Uncategorized
     INVALID_KEY(9998, "Invalid Key"),
     UNCATEGORIZED(9999, "Uncategorized Exceptions"),
+    UNAUTHENTICATED(401, "Unauthenticated"),
+    SIGNER_KEY_UNAUTHENTICATED(401, "Signer Key Unauthenticated");
 
     ; // Default error code for unexpected exceptions
 
-    private int code;
-    private String message;
+    int code;
+    String message;
 
     ErrorCode(int code, String message) {
         this.code = code;
         this.message = message;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getMessage() {
-        return message;
     }
 }

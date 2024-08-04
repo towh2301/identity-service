@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.towh.identity_service.dto.response.UserResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.towh.identity_service.dto.request.ApiResponse;
@@ -17,11 +18,11 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users") // It helps us to create a base URL for all the endpoints in the controller
+@RequestMapping("/users")// It helps us to create a base URL for all the endpoints in the controller
 @RequiredArgsConstructor
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
-    @Autowired
-    private static UserService userService;
+    UserService userService;
 
     // Add a POST mapping to create a new user
     @PostMapping

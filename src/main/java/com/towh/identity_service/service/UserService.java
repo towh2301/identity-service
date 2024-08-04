@@ -6,23 +6,20 @@ import com.towh.identity_service.dto.response.UserResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.towh.identity_service.dto.request.UserCreationRequest;
-import com.towh.identity_service.dto.request.UserUpdateRequest;
+import com.towh.identity_service.dto.request.*;
 import com.towh.identity_service.entity.User;
-import com.towh.identity_service.exception.AppException;
-import com.towh.identity_service.exception.ErrorCode;
+import com.towh.identity_service.exception.*;
 import com.towh.identity_service.mapper.UserMapper;
 import com.towh.identity_service.repository.UserRepository;
 
-@RequiredArgsConstructor // Lombok's annotation to generate a constructor with all final fields
-@FieldDefaults(level = AccessLevel.PRIVATE)
+
 @Service
+@RequiredArgsConstructor // Lombok's annotation to generate a constructor with all final fields
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService {
     // Inject the UserRepository and UserMapper
     UserRepository userRepository;
@@ -38,10 +35,8 @@ public class UserService {
         User user = userMapper.toUser(request);
 
         // Hash the user's password
-        // PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        // user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-        user.setPassword(request.getPassword());
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         // Save the user to the database
         return userRepository.save(user);
