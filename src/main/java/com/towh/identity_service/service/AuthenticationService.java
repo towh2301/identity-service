@@ -48,8 +48,8 @@ public class AuthenticationService {
         var token = generateToken(user.getUsername());
 
         return AuthenticationResponse.builder()
-                .authenticated(true)
                 .token(token)
+                .authenticated(true)
                 .build();
     }
 

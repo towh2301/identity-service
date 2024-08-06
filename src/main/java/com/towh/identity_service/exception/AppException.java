@@ -1,8 +1,12 @@
 package com.towh.identity_service.exception;
 
+import lombok.*;
+
 /**
  * AppException
  */
+@Setter
+@Getter
 public class AppException extends RuntimeException {
     private ErrorCode errorCode;
 
@@ -11,11 +15,4 @@ public class AppException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
-    public ErrorCode getErrorCode() {
-        return errorCode;
-    }
-
-    public void setErrorCode(ErrorCode errorCode) {
-        this.errorCode = errorCode;
-    }
 }
