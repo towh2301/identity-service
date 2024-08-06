@@ -6,16 +6,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Set;
+
 @Data
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class UserResponse {
-    private String id;
-    private String username;
-    private String password;
-    private String firstName;
-    private String lastName;
-    private String email;
+    String id;
+    String username;
+    String firstName;
+    String lastName;
+    String email;
+    Set<String> roles;
 }

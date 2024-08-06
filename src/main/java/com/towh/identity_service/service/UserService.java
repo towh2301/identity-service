@@ -1,8 +1,10 @@
 package com.towh.identity_service.service;
 
+import java.util.HashSet;
 import java.util.List;
 
 import com.towh.identity_service.dto.response.UserResponse;
+import com.towh.identity_service.enums.Roles;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,6 +26,7 @@ public class UserService {
     // Inject the UserRepository and UserMapper
     UserRepository userRepository;
     UserMapper userMapper;
+    PasswordEncoder passwordEncoder;
 
     public User createUser(UserCreationRequest request) {
         // Check if the user already exists
@@ -35,8 +38,12 @@ public class UserService {
         User user = userMapper.toUser(request);
 
         // Hash the user's password
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        // Set roles for user
+        HashSet<String> rolesHashSet = new HashSet<>();
+        rolesHashSet.add(Roles.USER.name());
+        user.setRoles(rolesHashSet);
 
         // Save the user to the database
         return userRepository.save(user);

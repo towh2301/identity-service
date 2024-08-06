@@ -23,13 +23,13 @@ public class UserCreationRequest {
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = "Password must contain at least one digit, one lowercase, one uppercase, one special character, and no whitespace")
     String password;
 
-    @NotBlank(message = "FIRST_NAME_INVALID")
+    //@NotBlank(message = "FIRST_NAME_INVALID")
     String firstName;
 
-    @NotBlank(message = "LAST_NAME_INVALID")
+    //    @NotBlank(message = "LAST_NAME_INVALID")
     String lastName;
 
-    @NotBlank(message = "EMAIL_INVALID")
+    // @NotBlank(message = "EMAIL_INVALID")
     String email;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
