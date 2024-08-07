@@ -24,7 +24,5 @@ public class User {
     String lastName;
     String email;
     LocalDate dob;
-
-    @ElementCollection
     Set<String> roles;
 }

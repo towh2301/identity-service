@@ -2,7 +2,6 @@ package com.towh.identity_service.mapper;
 
 import com.towh.identity_service.dto.response.UserResponse;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import com.towh.identity_service.dto.request.UserCreationRequest;

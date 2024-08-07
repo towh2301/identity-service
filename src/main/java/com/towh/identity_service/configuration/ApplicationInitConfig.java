@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashSet;
 
-
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
@@ -29,12 +28,15 @@ public class ApplicationInitConfig {
                 var roles = new HashSet<String>();
                 roles.add(Roles.ADMIN.name());
 
+                // Create an admin user
                 var user = new User();
                 user.setUsername("admin");
                 user.setPassword(passwordEncoder.encode("admin"));
                 user.setRoles(roles);
 
+                // Save the user to the database
                 userRepository.save(user);
+                log.warn("Admin user created with username: admin and password: admin");
             }
         };
     }

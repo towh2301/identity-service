@@ -22,7 +22,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
-        var result = authenticationService.authenticate(request);
+        AuthenticationResponse result = authenticationService.authenticate(request);
         return ApiResponse.<AuthenticationResponse>builder()
                 .code(200)
                 .result(result)
@@ -32,7 +32,7 @@ public class AuthenticationController {
     @PostMapping("/introspect")
     ApiResponse<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request)
             throws JOSEException, ParseException {
-        var result = authenticationService.introspectToken(request);
+        IntrospectResponse result = authenticationService.introspectToken(request);
         return ApiResponse.<IntrospectResponse>builder()
                 .code(200)
                 .result(result)

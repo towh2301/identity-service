@@ -9,6 +9,7 @@ import com.towh.identity_service.dto.request.AuthenticationRequest;
 import com.towh.identity_service.dto.request.IntrospectRequest;
 import com.towh.identity_service.dto.response.AuthenticationResponse;
 import com.towh.identity_service.dto.response.IntrospectResponse;
+import com.towh.identity_service.entity.User;
 import com.towh.identity_service.exception.AppException;
 import com.towh.identity_service.exception.ErrorCode;
 import com.towh.identity_service.repository.UserRepository;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.*;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.StringJoiner;
 
 @Service
 @RequiredArgsConstructor // Lombok's annotation to generate a constructor with all final fields
@@ -34,7 +36,7 @@ public class AuthenticationService {
     protected String SIGNER_KEY;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        var user = userRepository.findByUsername(request.getUsername()).orElseThrow(
+        User user = userRepository.findByUsername(request.getUsername()).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -45,7 +47,7 @@ public class AuthenticationService {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
 
-        var token = generateToken(user.getUsername());
+        String token = generateToken(user);
 
         return AuthenticationResponse.builder()
                 .token(token)
@@ -53,17 +55,18 @@ public class AuthenticationService {
                 .build();
     }
 
-    private String generateToken(String username) {
+    private String generateToken(User user) {
         // For JWT token header
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
 
         // For JWT token payload
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(username)
+                .subject(user.getUsername())
                 .issuer("identity-service") // Domain of the service
                 .issueTime(new Date())
                 .audience("identity-service") // Domain of the service
                 .expirationTime(new Date(System.currentTimeMillis() + 3600 * 1000)) // 1 hour
+                .claim("scope", buildScope(user))
                 .build();
 
         // Create payload
@@ -96,5 +99,13 @@ public class AuthenticationService {
                 .build();
     }
 
+    private String buildScope(User user) {
+        StringJoiner joiner = new StringJoiner(" ");
+        if (!user.getRoles().isEmpty()) {
+            user.getRoles().forEach(joiner::add);
+        }
+
+        return joiner.toString();
+    }
 
 }

@@ -4,24 +4,28 @@ import java.util.HashSet;
 import java.util.List;
 
 import com.towh.identity_service.dto.response.UserResponse;
-import com.towh.identity_service.enums.Roles;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.towh.identity_service.dto.request.*;
 import com.towh.identity_service.entity.User;
+import com.towh.identity_service.enums.Roles;
 import com.towh.identity_service.exception.*;
 import com.towh.identity_service.mapper.UserMapper;
 import com.towh.identity_service.repository.UserRepository;
 
-
 @Service
 @RequiredArgsConstructor // Lombok's annotation to generate a constructor with all final fields
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class UserService {
     // Inject the UserRepository and UserMapper
     UserRepository userRepository;
@@ -49,11 +53,16 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public List<User> getAllUser() {
-        return userRepository.findAll();
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<UserResponse> getAllUser() {
+        log.info("In method get all users");
+        return userRepository.findAll().stream()
+                .map(userMapper::toUserResponse).toList();
     }
 
+    @PostAuthorize("returnObject.username == authentication.name")
     public UserResponse getUserById(String userId) {
+        log.info("In method get user by id");
         return userMapper.toUserResponse(
                 userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
     }
@@ -67,5 +76,16 @@ public class UserService {
     public void deleteUser(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         userRepository.delete(user);
+    }
+
+    public UserResponse getCurrentUserInfo(){
+        // Get name from auth context holder
+        var context = SecurityContextHolder.getContext();
+        String username = context.getAuthentication().getName();
+
+        // Find User by username
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        return userMapper.toUserResponse(user);
     }
 }
