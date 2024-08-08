@@ -3,47 +3,51 @@ package com.towh.identity_service.exception;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Getter
 public enum ErrorCode {
     // User Management
-    USER_EXISTED(1001, "User existed"),
-    USER_NOT_FOUND(1002, "User not found"),
+    USER_EXISTED(1001, "User existed", HttpStatus.FORBIDDEN),
+    USER_NOT_FOUND(1002, "User not found", HttpStatus.NOT_FOUND),
 
     // Authentication
-    INVALID_CREDENTIALS(1003, "Invalid credentials"),
-    INVALID_TOKEN(1004, "Invalid token"),
-    TOKEN_EXPIRED(1005, "Token expired"),
-    TOKEN_NOT_FOUND(1006, "Token not found"),
-    TOKEN_REVOKED(1007, "Token revoked"),
-    INVALID_REFRESH_TOKEN(1008, "Invalid refresh token"),
-    REFRESH_TOKEN_EXPIRED(1009, "Refresh token expired"),
-    REFRESH_TOKEN_NOT_FOUND(1010, "Refresh token not found"),
+    INVALID_CREDENTIALS(1003, "Invalid credentials", HttpStatus.INTERNAL_SERVER_ERROR),
+    INVALID_TOKEN(1004, "Invalid token", HttpStatus.INTERNAL_SERVER_ERROR),
+    TOKEN_EXPIRED(1005, "Token expired", HttpStatus.INTERNAL_SERVER_ERROR),
+    TOKEN_NOT_FOUND(1006, "Token not found", HttpStatus.INTERNAL_SERVER_ERROR),
+    TOKEN_REVOKED(1007, "Token revoked", HttpStatus.INTERNAL_SERVER_ERROR),
+    INVALID_REFRESH_TOKEN(1008, "Invalid refresh token", HttpStatus.INTERNAL_SERVER_ERROR),
+    REFRESH_TOKEN_EXPIRED(1009, "Refresh token expired", HttpStatus.INTERNAL_SERVER_ERROR),
+    REFRESH_TOKEN_NOT_FOUND(1010, "Refresh token not found", HttpStatus.INTERNAL_SERVER_ERROR),
 
     // User Creation Invalid
-    USERNAME_INVALID(2001, "Username is at least 3 characters"),
-    PASSWORD_INVALID(2002, "Password must be at least 8 characters long"),
+    USERNAME_INVALID(2001, "Username is at least 3 characters", HttpStatus.BAD_REQUEST),
+    PASSWORD_INVALID(2002, "Password must be at least 8 characters long", HttpStatus.BAD_REQUEST),
     PASSWORD_PATTERN_INVALID(2003,
-            "Password must contain at least one digit, one lowercase, one uppercase, one special character, and no whitespace"),
-    FIRST_NAME_INVALID(2004, "First name is required"),
-    LAST_NAME_INVALID(2005, "Last name is required"),
-    EMAIL_INVALID(2006, "Email is Wrong Format"),
-    DOB_INVALID(2007, "Date of birth should be in the past"),
+            "Password must contain at least one digit, one lowercase, one uppercase, one special character, and no whitespace", HttpStatus.BAD_REQUEST),
+    FIRST_NAME_INVALID(2004, "First name is required", HttpStatus.BAD_REQUEST),
+    LAST_NAME_INVALID(2005, "Last name is required", HttpStatus.BAD_REQUEST),
+    EMAIL_INVALID(2006, "Email is Wrong Format", HttpStatus.BAD_REQUEST),
+    DOB_INVALID(2007, "Date of birth should be in the past", HttpStatus.BAD_REQUEST),
 
     // Uncategorized
-    INVALID_KEY(9998, "Invalid Key"),
-    UNCATEGORIZED(9999, "Uncategorized Exceptions"),
-    UNAUTHENTICATED(401, "Unauthenticated"),
-    SIGNER_KEY_UNAUTHENTICATED(401, "Signer Key Unauthenticated");
+    INVALID_KEY(9998, "Invalid Key", HttpStatus.UNAUTHORIZED),
+    UNCATEGORIZED(9999, "Uncategorized Exceptions", HttpStatus.UNAUTHORIZED),
+    UNAUTHENTICATED(401, "Unauthenticated", HttpStatus.FORBIDDEN),
+    SIGNER_KEY_UNAUTHENTICATED(401, "Signer Key Unauthenticated", HttpStatus.UNAUTHORIZED);
 
     ; // Default error code for unexpected exceptions
 
     int code;
     String message;
+    HttpStatusCode httpStatusCode;
 
-    ErrorCode(int code, String message) {
+    ErrorCode(int code, String message, HttpStatusCode httpStatusCode) {
         this.code = code;
         this.message = message;
+        this.httpStatusCode = httpStatusCode;
     }
 }

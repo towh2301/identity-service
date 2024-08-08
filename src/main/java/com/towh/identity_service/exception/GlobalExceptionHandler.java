@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.towh.identity_service.dto.request.ApiResponse;
 
+import java.nio.file.AccessDeniedException;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     // Handle the RuntimeException
     @ExceptionHandler(value = Exception.class)
-    ResponseEntity<ApiResponse<?>> handlingRuntimeException(RuntimeException e) {
+    ResponseEntity<ApiResponse> handlingRuntimeException(RuntimeException e) {
         ApiResponse<?> response = new ApiResponse<>();
 
         // Set the error code and message to uncategorized
@@ -23,7 +25,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = AppException.class)
-    ResponseEntity<ApiResponse<?>> handlingAppException(AppException e) {
+    ResponseEntity<ApiResponse> handlingAppException(AppException e) {
         ApiResponse<?> response = new ApiResponse<>();
         ErrorCode errorCode = e.getErrorCode();
 
@@ -31,13 +33,21 @@ public class GlobalExceptionHandler {
         response.setCode(errorCode.getCode());
         response.setMessage(errorCode.getMessage());
 
-        return ResponseEntity.badRequest().body(response);
+        return ResponseEntity.status(errorCode.getHttpStatusCode()).body(response);
+    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    ResponseEntity<ApiResponse> handlingAccessDeniedException(AccessDeniedException e) {
+        ErrorCode errorCode = ErrorCode.UNCATEGORIZED;
+        return ResponseEntity.status(errorCode.getHttpStatusCode()).body(ApiResponse.builder()
+                .message(errorCode.getMessage())
+                .build());
     }
 
     // Handle the MethodArgumentNotValidException
     @SuppressWarnings("null")
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    ResponseEntity<ApiResponse<?>> handlingMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    ResponseEntity<ApiResponse> handlingMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         ApiResponse<?> response = new ApiResponse<>();
         String enumKey = e.getFieldError().getDefaultMessage();
 

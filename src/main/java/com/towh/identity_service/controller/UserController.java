@@ -16,6 +16,7 @@ import com.towh.identity_service.service.UserService;
 import jakarta.validation.Valid;
 
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,44 +30,25 @@ public class UserController {
 
     // Add a POST mapping to create a new user
     @PostMapping
-    public ApiResponse<?> createUser(@RequestBody @Valid UserCreationRequest request) {
-        ApiResponse<User> response = new ApiResponse<>();
-
-        // Set the response code and result
-        response.setCode(200);
-        response.setResult(userService.createUser(request));
-
-        return response;
+    ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.createUser(request))
+                .build();
     }
 
     @GetMapping
         // Add a GET mapping
     ApiResponse<?> getAllUser() {
-        ApiResponse<Map<Integer, List<UserResponse>>> response = new ApiResponse<>();
-
-        // Get the current authentication
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        log.info("User: {}", authentication.getName());
-        authentication.getAuthorities().forEach(grantedAuthentication -> log.info("Role: {}",
-                grantedAuthentication.getAuthority()));
-
-        // Set the response code and result
-        response.setCode(200);
-        response.setResult(Collections.singletonMap(userService.getAllUser().size(), userService.getAllUser()));
-        return response;
+        return ApiResponse.<List<UserResponse>>builder()
+                .result(userService.getAllUsers())
+                .build();
     }
 
     @GetMapping("/{userId}")
     ApiResponse<?> getUserById(@PathVariable("userId") String userId) {
-        log.info("In method get user by id");
-        ApiResponse<UserResponse> response = new ApiResponse<>();
-
-        // Set the response code and result
-        response.setCode(200);
-        response.setResult(userService.getUserById(userId));
-
-        return response;
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.getUserById(userId))
+                .build();
     }
 
     @GetMapping("/myInfo")
@@ -78,15 +60,15 @@ public class UserController {
     }
 
     @PutMapping("{userId}")
-    UserResponse putMethodName(@PathVariable("userId") String id, @RequestBody UserUpdateRequest request) {
-        return userService.updateUser(id, request);
+    ApiResponse<UserResponse> putMethodName(@PathVariable("userId") String id, @RequestBody UserUpdateRequest request) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.updateUser(id, request))
+                .build();
     }
 
     @DeleteMapping("{userId}")
-    String deleteUserById(@PathVariable("userId") String userId) {
+     ApiResponse<String> deleteUser(@PathVariable String userId) {
         userService.deleteUser(userId);
-        return "User deleted successfully";
+        return ApiResponse.<String>builder().result("User has been deleted").build();
     }
-
-
 }

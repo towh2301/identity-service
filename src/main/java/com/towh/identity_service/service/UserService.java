@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,32 +33,28 @@ public class UserService {
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
 
-    public User createUser(UserCreationRequest request) {
-        // Check if the user already exists
-        if (userRepository.existsByUsername(request.getUsername())) {
+    public UserResponse createUser(UserCreationRequest request) {
+        User user = userMapper.toUser(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        HashSet<String> roles = new HashSet<>();
+        roles.add(Roles.USER.name());
+
+        user.setRoles(roles);
+
+        try {
+            user = userRepository.save(user);
+        } catch (DataIntegrityViolationException exception) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
 
-        // Set the user's properties from the request using mapstruct
-        User user = userMapper.toUser(request);
-
-        // Hash the user's password
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-        // Set roles for user
-        HashSet<String> rolesHashSet = new HashSet<>();
-        rolesHashSet.add(Roles.USER.name());
-        user.setRoles(rolesHashSet);
-
-        // Save the user to the database
-        return userRepository.save(user);
+        return userMapper.toUserResponse(user);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public List<UserResponse> getAllUser() {
-        log.info("In method get all users");
-        return userRepository.findAll().stream()
-                .map(userMapper::toUserResponse).toList();
+    public List<UserResponse> getAllUsers() {
+        log.info("In method get Users");
+        return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }
 
     @PostAuthorize("returnObject.username == authentication.name")
