@@ -29,10 +29,14 @@ public class ApplicationInitConfig {
                 roles.add(Role.ADMIN.name());
 
                 // Create an admin user
-                var user = new User();
-                user.setUsername("admin");
-                user.setPassword(passwordEncoder.encode("admin"));
-                user.setRoles(roles);
+                var user = User.builder()
+                        .username("admin")
+                        .password(passwordEncoder.encode("admin"))
+                        .build();
+//                        .setUsername("admin")
+//                        .setPassword(passwordEncoder.encode("admin"))
+//                        .build());
+                //user.setRoles(roles);
 
                 // Save the user to the database
                 userRepository.save(user);

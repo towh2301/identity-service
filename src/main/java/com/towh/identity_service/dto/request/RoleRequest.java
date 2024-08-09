@@ -1,20 +1,17 @@
-package com.towh.identity_service.entity;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+package com.towh.identity_service.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Getter
-@Setter
-@Builder
+import java.util.Set;
+
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-public class Permission {
-    @Id
+public class RoleRequest {
     String name;
     String description;
+    Set<String> permissionSet;
 }

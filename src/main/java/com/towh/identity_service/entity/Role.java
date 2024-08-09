@@ -19,9 +19,8 @@ import lombok.experimental.FieldDefaults;
 public class Role {
     @Id
     String name;
-
     String description;
 
     @ManyToMany
-    Set<Permission> permissions;
+    Set<Permission> permissionSet;
 }
