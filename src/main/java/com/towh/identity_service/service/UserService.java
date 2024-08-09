@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 import com.towh.identity_service.dto.request.*;
 import com.towh.identity_service.entity.User;
-import com.towh.identity_service.enums.Roles;
+import com.towh.identity_service.enums.Role;
 import com.towh.identity_service.exception.*;
 import com.towh.identity_service.mapper.UserMapper;
 import com.towh.identity_service.repository.UserRepository;
@@ -38,7 +38,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         HashSet<String> roles = new HashSet<>();
-        roles.add(Roles.USER.name());
+        roles.add(Role.USER.name());
 
         user.setRoles(roles);
 
@@ -53,7 +53,6 @@ public class UserService {
 
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getAllUsers() {
-        log.info("In method get Users");
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }
 
@@ -64,12 +63,14 @@ public class UserService {
                 userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
     }
 
+    @PostAuthorize("returnObject.username == authentication.name")
     public UserResponse updateUser(String userId, UserUpdateRequest request) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         userMapper.updateUser(user, request);
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         userRepository.delete(user);

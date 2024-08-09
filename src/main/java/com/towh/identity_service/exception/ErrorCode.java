@@ -35,19 +35,18 @@ public enum ErrorCode {
 
     // Uncategorized
     INVALID_KEY(9998, "Invalid Key", HttpStatus.UNAUTHORIZED),
-    UNCATEGORIZED(9999, "Uncategorized Exceptions", HttpStatus.UNAUTHORIZED),
-    UNAUTHENTICATED(401, "Unauthenticated", HttpStatus.FORBIDDEN),
-    SIGNER_KEY_UNAUTHENTICATED(401, "Signer Key Unauthenticated", HttpStatus.UNAUTHORIZED);
-
-    ; // Default error code for unexpected exceptions
+    UNCATEGORIZED_EXCEPTION(9999, "Uncategorized Exceptions", HttpStatus.UNAUTHORIZED),
+    UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
+    UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
+    SIGNER_KEY_UNAUTHENTICATED(1008, "Signer Key Unauthenticated", HttpStatus.UNAUTHORIZED);
 
     int code;
     String message;
-    HttpStatusCode httpStatusCode;
+    HttpStatusCode statusCode;
 
-    ErrorCode(int code, String message, HttpStatusCode httpStatusCode) {
+    ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
         this.message = message;
-        this.httpStatusCode = httpStatusCode;
+        this.statusCode = statusCode;
     }
 }

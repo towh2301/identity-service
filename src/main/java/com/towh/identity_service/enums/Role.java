@@ -1,5 +1,5 @@
 package com.towh.identity_service.enums;
 
-public enum Roles {
+public enum Role {
     ADMIN, USER
 }

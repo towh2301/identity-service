@@ -1,7 +1,7 @@
 package com.towh.identity_service.configuration;
 
 import com.towh.identity_service.entity.User;
-import com.towh.identity_service.enums.Roles;
+import com.towh.identity_service.enums.Role;
 import com.towh.identity_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,7 +26,7 @@ public class ApplicationInitConfig {
         return args -> {
             if (userRepository.findByUsername("admin").isEmpty()) {
                 var roles = new HashSet<String>();
-                roles.add(Roles.ADMIN.name());
+                roles.add(Role.ADMIN.name());
 
                 // Create an admin user
                 var user = new User();
