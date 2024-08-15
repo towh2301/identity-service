@@ -1,7 +1,7 @@
 package com.towh.identity_service.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.towh.identity_service.dto.request.ApiResponse;
+import com.towh.identity_service.dto.response.ApiResponse;
 import com.towh.identity_service.exception.ErrorCode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

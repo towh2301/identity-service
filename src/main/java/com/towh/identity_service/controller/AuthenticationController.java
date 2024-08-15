@@ -1,7 +1,7 @@
 package com.towh.identity_service.controller;
 
 import com.nimbusds.jose.JOSEException;
-import com.towh.identity_service.dto.request.ApiResponse;
+import com.towh.identity_service.dto.response.ApiResponse;
 import com.towh.identity_service.dto.request.AuthenticationRequest;
 import com.towh.identity_service.dto.request.IntrospectRequest;
 import com.towh.identity_service.dto.response.AuthenticationResponse;

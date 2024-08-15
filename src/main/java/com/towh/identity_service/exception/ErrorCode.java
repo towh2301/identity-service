@@ -24,14 +24,14 @@ public enum ErrorCode {
     REFRESH_TOKEN_NOT_FOUND(1010, "Refresh token not found", HttpStatus.INTERNAL_SERVER_ERROR),
 
     // User Creation Invalid
-    USERNAME_INVALID(2001, "Username is at least 3 characters", HttpStatus.BAD_REQUEST),
-    PASSWORD_INVALID(2002, "Password must be at least 8 characters long", HttpStatus.BAD_REQUEST),
     PASSWORD_PATTERN_INVALID(2003,
             "Password must contain at least one digit, one lowercase, one uppercase, one special character, and no whitespace", HttpStatus.BAD_REQUEST),
     FIRST_NAME_INVALID(2004, "First name is required", HttpStatus.BAD_REQUEST),
     LAST_NAME_INVALID(2005, "Last name is required", HttpStatus.BAD_REQUEST),
     EMAIL_INVALID(2006, "Email is Wrong Format", HttpStatus.BAD_REQUEST),
-    DOB_INVALID(2007, "Date of birth should be in the past", HttpStatus.BAD_REQUEST),
+    USERNAME_INVALID(2001, "Username must be at least {min} characters", HttpStatus.BAD_REQUEST),
+    PASSWORD_INVALID(2007, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
+    DOB_INVALID(2008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
 
     // Uncategorized
     INVALID_KEY(9998, "Invalid Key", HttpStatus.UNAUTHORIZED),

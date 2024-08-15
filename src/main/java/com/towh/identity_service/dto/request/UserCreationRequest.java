@@ -2,6 +2,7 @@ package com.towh.identity_service.dto.request;
 
 import java.time.LocalDate;
 
+import com.towh.identity_service.validator.DobConstraint;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -33,6 +34,6 @@ public class UserCreationRequest {
     String email;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Past(message = "DOB_INVALID")
+    @DobConstraint(min = 18, message = "DOB_INVALID")
     LocalDate dob;
 }

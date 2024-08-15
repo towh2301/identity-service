@@ -1,6 +1,6 @@
 package com.towh.identity_service.controller;
 
-import com.towh.identity_service.dto.request.ApiResponse;
+import com.towh.identity_service.dto.response.ApiResponse;
 import com.towh.identity_service.dto.request.PermissionRequest;
 import com.towh.identity_service.dto.response.PermissionResponse;
 import com.towh.identity_service.service.PermissionService;

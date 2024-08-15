@@ -7,17 +7,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
-import com.towh.identity_service.dto.request.ApiResponse;
+import com.towh.identity_service.dto.response.ApiResponse;
 import com.towh.identity_service.dto.request.UserCreationRequest;
 import com.towh.identity_service.dto.request.UserUpdateRequest;
-import com.towh.identity_service.entity.User;
 import com.towh.identity_service.service.UserService;
 
 import jakarta.validation.Valid;
 
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -54,7 +50,6 @@ public class UserController {
     @GetMapping("/myInfo")
     ApiResponse<UserResponse> getCurrentUserInfor() {
         return ApiResponse.<UserResponse>builder()
-                .code(200)
                 .result(userService.getCurrentUserInfo())
                 .build();
     }
@@ -67,7 +62,7 @@ public class UserController {
     }
 
     @DeleteMapping("{userId}")
-     ApiResponse<String> deleteUser(@PathVariable String userId) {
+    ApiResponse<String> deleteUser(@PathVariable String userId) {
         userService.deleteUser(userId);
         return ApiResponse.<String>builder().result("User has been deleted").build();
     }
